@@ -1,0 +1,30 @@
+name: CI Pipeline  # Nazwa procesu CI
+
+on:  # Definiuje zdarzenia, które uruchomią pipeline
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest  # System operacyjny środowiska
+
+    steps:  # Kolejne kroki do wykonania
+    - name: Checkout code  # Pobierz kod
+      uses: actions/checkout@v3
+
+    - name: Setup Python  # Zainstaluj Pythona
+      uses: actions/setup-python@v3
+      with:
+        python-version: '3.9'
+
+    - name: Install dependencies  # Zainstaluj zależności
+      run: |
+        pip install -r requirements.txt
+
+    - name: Run tests  # Uruchom testy
+      run: |
+        pytest
