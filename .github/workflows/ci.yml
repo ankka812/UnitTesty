@@ -3,19 +3,19 @@ name: CI Pipeline
 on:
   push:
     branches:
-      - main  # Pipeline uruchamia się przy pushu na gałąź main
+      - main  
   pull_request:
     branches:
-      - main  # Pipeline uruchamia się także przy pull requestach
+      - main  
 
 jobs:
-  # ===== JOB: Testy jednostkowe z raportem pokrycia =====
+ 
   tests:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3  # Pobiera kod z repozytorium
+        uses: actions/checkout@v3  
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -23,14 +23,14 @@ jobs:
           python-version: '3.12'
 
       - name: Install dependencies
-        run: pip install -r requirements.txt  # Instalacja wymaganych bibliotek
+        run: pip install -r requirements.txt  
 
       - name: Run tests with coverage
         run: |
-          pytest test.py -vv --cov=. --cov-report=xml --cov-report=term --disable-warnings  # Uruchamia testy z raportem pokrycia
-        continue-on-error: false  # Pipeline kończy się błędem, jeśli testy nie przejdą
+          pytest test.py -vv --cov=. --cov-report=xml --cov-report=term --disable-warnings 
+        continue-on-error: false  
 
-  # ===== JOB: Lintowanie kodu =====
+  
   lint:
     runs-on: ubuntu-latest
 
@@ -42,9 +42,9 @@ jobs:
         uses: github/super-linter@v5
         env:
           DEFAULT_BRANCH: main
-          VALIDATE_PYTHON_PYLINT: true  # Sprawdzanie kodu Pythona
+          VALIDATE_PYTHON_PYLINT: true  
 
-  # ===== JOB: Tworzenie Issues z TODO =====
+ 
   create_issues_from_todo:
     runs-on: ubuntu-latest
 
