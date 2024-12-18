@@ -1,0 +1,75 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches:
+      - main  # Pipeline uruchamia się przy pushu na gałąź main
+  pull_request:
+    branches:
+      - main  # Pipeline uruchamia się także przy pull requestach
+
+jobs:
+  # ===== JOB: Testy jednostkowe z raportem pokrycia =====
+  tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3  # Pobiera kod z repozytorium
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt  # Instalacja wymaganych bibliotek
+
+      - name: Run tests with coverage
+        run: |
+          pytest --cov=. --cov-report=xml --cov-report=term  # Uruchamia testy z raportem pokrycia
+        continue-on-error: false  # Pipeline kończy się błędem, jeśli testy nie przejdą
+
+      - name: Upload coverage to Codecov (optional)
+        uses: codecov/codecov-action@v3
+        with:
+          files: coverage.xml
+          fail_ci_if_error: true
+
+  # ===== JOB: Lintowanie kodu =====
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Super-Linter
+        uses: github/super-linter@v5
+        env:
+          DEFAULT_BRANCH: main
+          VALIDATE_PYTHON_PYLINT: true  # Sprawdzanie kodu Pythona
+
+  # ===== JOB: Tworzenie Issues z TODO =====
+  create_issues_from_todo:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Scan for TODO comments
+        id: find_todos
+        run: |
+          grep -rni 'TODO' . > todos.txt || echo "No TODOs found"
+          if [[ -s todos.txt ]]; then
+            echo "Found TODOs"
+          else
+            exit 0
+          fi
+
+      - name: Create Issues for TODOs
+        if: ${{ steps.find_todos.outputs.has_todos != '' }}
+        uses: JasonEtco/create-an-issue@v2
+        with:
+          filename: todos.txt
