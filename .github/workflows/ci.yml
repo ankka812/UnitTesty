@@ -17,6 +17,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3  # Pobiera kod z repozytorium
 
+      - name: List directory contents
+        run: ls -R  # Wypisuje strukturę katalogów repozytorium (sprawdzisz, gdzie jest test.py)
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
@@ -27,7 +30,7 @@ jobs:
 
       - name: Run tests with coverage
         run: |
-          pytest --cov=. --cov-report=xml --cov-report=term  # Uruchamia testy z raportem pokrycia
+          pytest --cov=. --cov-report=xml --cov-report=term --disable-warnings  # Uruchamia testy z raportem pokrycia
         continue-on-error: false  # Pipeline kończy się błędem, jeśli testy nie przejdą
 
       - name: Upload coverage to Codecov (optional)
