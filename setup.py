@@ -9,7 +9,6 @@ setup(
     url="https://github.com/ankka812/UnitTesty.git",
     packages=find_packages(),
     include_package_data=True,
-    install_requires=requirements,
     install_requires=[],
     python_requires=">=3.6",
 )
