@@ -104,14 +104,16 @@ class Test:
         # Given
         students_list = {}
         mock_file = mock_open()
+        fixed_datetime = datetime(2024, 12, 20, 14, 33, 18, 111717)
 
-        with patch("builtins.open", mock_file):
+        with patch("builtins.open", mock_file), patch("task1.datetime") as mock_datetime:
+            mock_datetime.now.return_value = fixed_datetime
             # When
             export_students("students.txt", students_list)
 
         # Then
         mock_file.assert_called_once_with("students.txt", "w")
-        mock_file().write.assert_called_with(f"{datetime.now()}\n")
+        mock_file().write.assert_called_with(f"{fixed_datetime}\n")
 
     def test_import_students(self):
         # Given
