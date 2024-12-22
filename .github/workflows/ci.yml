@@ -67,3 +67,6 @@ jobs:
         uses: JasonEtco/create-an-issue@v2
         with:
           filename: todos.txt
+
+  deploy:
+    uses: ./.github/workflows/deploy_testing_package.yml
