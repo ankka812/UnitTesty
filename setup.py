@@ -10,7 +10,7 @@ version = os.getenv(
 )
 
 setup(
-    name="student management",
+    name="student-management",
     version="0.1.0",  
     author="ankka812", 
     author_email="anka.w812@gmail.com", 
