@@ -36,6 +36,11 @@ jobs:
       env:
         PACKAGE_VERSION: ${{ env.VERSION }}
 
+    - name: Debug TWINE_PASSWORD secret
+      run: echo "TWINE_PASSWORD is set"
+      env:
+        TWINE_PASSWORD: ${{ secrets.TWINE_PASSWORD }}
+
     - name: Publish to TestPyPI
       env:
         TWINE_USERNAME: __token__
